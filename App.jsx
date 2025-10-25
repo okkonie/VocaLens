@@ -27,13 +27,15 @@ function App() {
         qualityPrioritization: 'balanced',
       });
       
-      // Recognize text from the captured photo
-      // Use file:// prefix for the path
       const photoUri = `file://${photo.path}`;
       console.log('Photo path:', photoUri);
       const result = await TextRecognition.recognize(photoUri);
       console.log('Recognized text:', result.text);
-      setRecognizedText(result.text);
+      
+      // Split text into lines and format with numbers
+      const lines = result.text.split('\n').filter(line => line.trim() !== '');
+      const numberedText = lines.map((line, index) => `${index + 1}. ${line}`).join('\n');
+      setRecognizedText(numberedText);
     } catch (error) {
       console.error('Error taking picture or recognizing text:', error);
       setRecognizedText('Error: ' + error.message);
@@ -42,6 +44,8 @@ function App() {
     }
   };
 
+
+  // !! DELETE THIS
   KeepAwake.activate();
 
   return (
@@ -123,6 +127,7 @@ function AppContent({ recognizedText, setRecognizedText, hasPermission, device, 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    height: '100%',
     backgroundColor: '#000'
   },
   overlay: {
